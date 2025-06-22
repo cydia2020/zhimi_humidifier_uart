@@ -8,8 +8,21 @@ static const char *const TAG = "zhimi_humidifier";
 
 static const uint8_t ZHIMI_HUMIDIFIER_STATIC_HEADER[] = {0xAA, 0x93};  // byte 0 and 1 are static
 
-// because this implementation is currently rx-only, there is nothing to setup
-void ZhimiWaterSerialComponent::setup() {}
+void ZhimiWaterSerialComponent::setup() {
+  auto *water = new binary_sensor::BinarySensor();
+  auto *bucket = new binary_sensor::BinarySensor();
+  water->set_name("Humidifier: Water Present");
+  bucket->set_name("Humidifier: Bucket Present");
+
+  auto *humid = new ZhimiWaterSerialComponent();
+  humid->set_has_water(water);
+  humid->set_has_bucket(bucket);
+  humid->set_update_interval(1_s);
+
+  App.register_component(humid);
+  App.register_binary_sensor(water);
+  App.register_binary_sensor(bucket);
+}
 
 void ZhimiWaterSerialComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "zhimi_humidifier:");

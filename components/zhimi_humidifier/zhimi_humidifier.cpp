@@ -8,8 +8,11 @@ static const char *const TAG = "zhimi_humidifier";
 
 static const uint8_t ZHIMI_HUMIDIFIER_STATIC_HEADER[] = {0xAA, 0x93};  // byte 0 and 1 are static
 
-// because this implementation is currently rx-only, there is nothing to setup
-void ZhimiWaterSerialComponent::setup() {}
+void ZhimiWaterSerialComponent::setup() {
+  // during boot, the original micro sends out this, no idea why
+  static const uint8_t zeros[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+  this->write_array(zeros, sizeof(zeros));
+}
 
 void ZhimiWaterSerialComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "zhimi_humidifier:");

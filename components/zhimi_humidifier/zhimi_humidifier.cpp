@@ -1,3 +1,21 @@
+/* NOTE TO USERS:
+this entire thing is an Irene Frankenstein's monster, use with caution
+based on the PM1006 sensor componenet
+
+TODO: implement checksum
+
+NOTE: original data struct of the water level microcontroller
+has water, no bucket  0xaa 0x93 0x69 0xc3 0xf0
+has water, has bucket 0xaa 0x93 0x69 0x3c 0x87
+no water, no bucket   0xaa 0x93 0x96 0xc3 0xc3
+no water, has bucket  0xaa 0x93 0x96 0x3c 0x5a
+
+5-byte data structure, the first two bytes are static 0xaa 0x93
+the third byte indicates water level 0x69 is water detected, 0x96 is no water (capacitive touch water sensor)
+the fourth byte indicates whether the bucket was installed, 0xc3 is no bucket, 0x3c is bucket installed (reed sw)
+the fifth byte is likely some kind of checksum, but i have no idea what the algorithm is
+*/
+
 #include "zhimi_humidifier.h"
 #include "esphome/core/log.h"
 
